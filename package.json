@@ -1,0 +1,35 @@
+{
+  "name": "dbc-node-basesoap-client",
+  "version": "0.0.1",
+  "description": "Basic soap client",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --compilers js:babel/register",
+    "build": "npm run cleardest && babel ./src -d dist",
+    "cleardest": "rm -rf ./dist",
+    "watch": "npm run cleardest && babel ./src --watch -d dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DBCDK/dbc-node-basesoap-client"
+  },
+  "keywords": [
+    "dbc"
+  ],
+  "author": "DBC A/S",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DBCDK/dbc-node-basesoap-client/issues"
+  },
+  "homepage": "https://github.com/DBCDK/dbc-node-basesoap-client#readme",
+  "devDependencies": {
+    "babel": "^5.5.6",
+    "cache-manager": "^0.18.0",
+    "chai": "^2.3.0",
+    "mocha": "^2.2.4"
+  },
+  "dependencies": {
+    "es6-promise": "^2.1.1",
+    "soap": "^0.8.0"
+  }
+}
