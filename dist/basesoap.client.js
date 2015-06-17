@@ -1,26 +1,26 @@
-"use strict";
+'use strict';
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-var _soap = require("soap");
+var _soap = require('soap');
 
 var soap = _interopRequireWildcard(_soap);
 
-var _util = require("util");
+var _util = require('util');
 
 var util = _interopRequireWildcard(_util);
 
-var _path = require("path");
+var _path = require('path');
 
 var path = _interopRequireWildcard(_path);
 
-var _es6Promise = require("es6-promise");
+var _es6Promise = require('es6-promise');
 
-var _cacheManager = require("cache-manager");
+var _cacheManager = require('cache-manager');
 
 var cacheManager = _interopRequireWildcard(_cacheManager);
 
-var memoryCache = cacheManager.caching({ store: "memory", max: 100, ttl: 100 });
+var memoryCache = cacheManager.caching({ store: 'memory', max: 100, ttl: 100 });
 
 var BaseSoapClient = {};
 

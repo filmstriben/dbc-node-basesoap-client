@@ -1,12 +1,12 @@
 'use strict';
 
-import * as soap from "soap";
-import * as util from "util";
-import * as path from "path";
+import * as soap from 'soap';
+import * as util from 'util';
+import * as path from 'path';
 import {Promise} from 'es6-promise';
-import * as cacheManager from "cache-manager";
+import * as cacheManager from 'cache-manager';
 
-let memoryCache = cacheManager.caching({ store: "memory", max: 100, ttl: 100 });
+let memoryCache = cacheManager.caching({ store: 'memory', max: 100, ttl: 100 });
 
 let BaseSoapClient = {};
 
