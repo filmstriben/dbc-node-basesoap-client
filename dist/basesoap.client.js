@@ -10,21 +10,20 @@ var _util = require('util');
 
 var util = _interopRequireWildcard(_util);
 
-var _path = require('path');
-
-var path = _interopRequireWildcard(_path);
-
 var _es6Promise = require('es6-promise');
 
 var _cacheManager = require('cache-manager');
 
 var cacheManager = _interopRequireWildcard(_cacheManager);
 
-var memoryCache = cacheManager.caching({ store: 'memory', max: 100, ttl: 100 });
+var memoryCache = cacheManager.caching({
+  store: 'memory',
+  max: 100,
+  ttl: 100 });
 
 var BaseSoapClient = {};
 
-BaseSoapClient.client = function (wsdl, config, cache) {
+BaseSoapClient.client = function (wsdl, config) {
   var _soapclient = undefined;
 
   /**
@@ -33,6 +32,7 @@ BaseSoapClient.client = function (wsdl, config, cache) {
    * @return {Promise}
    */
   function _client(wsdl, options) {
+    // eslint-disable-line
     return new _es6Promise.Promise(function (resolve, reject) {
       if (_soapclient) {
         resolve(_soapclient);
@@ -65,17 +65,18 @@ BaseSoapClient.client = function (wsdl, config, cache) {
 
       if (ignoreCache) {
         _actionWithoutCache(client[op], query, function (err, result) {
-          err ? reject(err) : resolve(result);
+          err ? reject(err) : resolve(result); // eslint-disable-line
         });
       } else {
-        _actionWithCache(client[op], query, function (err, result) {
-          err ? reject(err) : resolve(result);
-        });
-      }
+          _actionWithCache(client[op], query, function (err, result) {
+            err ? reject(err) : resolve(result); // eslint-disable-line
+          });
+        }
     });
   }
 
   function _actionWithCache(call, options, callback) {
+    // eslint-disable-line
     var cachekey = JSON.stringify(options);
     memoryCache.wrap(cachekey, function (cb) {
       call(options, cb);
@@ -83,6 +84,7 @@ BaseSoapClient.client = function (wsdl, config, cache) {
   }
 
   function _actionWithoutCache(call, options, callback) {
+    // eslint-disable-line
     call(options, callback);
   }
 
