@@ -8,11 +8,12 @@ import * as cacheManager from 'cache-manager';
 let memoryCache = cacheManager.caching({
   store: 'memory',
   max: 100,
-  ttl: 100});
+  ttl: 100
+});
 
 let BaseSoapClient = {};
 
-BaseSoapClient.client = function (wsdl, config) {
+BaseSoapClient.client = function(wsdl, config) {
   let _soapclient;
 
   /**
@@ -21,16 +22,17 @@ BaseSoapClient.client = function (wsdl, config) {
    * @return {Promise}
    */
   function _client(wsdl, options) { // eslint-disable-line
-    return new Promise(function (resolve, reject) {
+    return new Promise(function(resolve, reject) {
       if (_soapclient) {
         resolve(_soapclient);
       }
       // Create soap client from a given wsdl
-      soap.createClient(wsdl, options, function (err, client) {
+      soap.createClient(wsdl, options, function(err, client) {
         // Resolve promise from result
         if (err) {
           reject(err);
-        } else {
+        }
+        else {
           _soapclient = client;
           resolve(client);
         }
@@ -46,17 +48,18 @@ BaseSoapClient.client = function (wsdl, config) {
    * @return {Promise}
    */
   function _action(client, op, options, ignoreCache) {
-    return new Promise(function (resolve, reject) {
+    return new Promise(function(resolve, reject) {
       // Call to service is wrapped by the cache manager
       // that handles caching auto-magically
       let query = util._extend({}, options);
 
       if (ignoreCache) {
-        _actionWithoutCache(client[op], query, function (err, result) {
+        _actionWithoutCache(client[op], query, function(err, result) { // eslint-disable-line
           err ? reject(err) : resolve(result); // eslint-disable-line
         });
-      } else {
-        _actionWithCache(client[op], query, function (err, result) {
+      }
+      else {
+        _actionWithCache(client[op], query, function(err, result) { // eslint-disable-line
           err ? reject(err) : resolve(result); // eslint-disable-line
         });
       }
@@ -65,7 +68,7 @@ BaseSoapClient.client = function (wsdl, config) {
 
   function _actionWithCache(call, options, callback) { // eslint-disable-line
     let cachekey = JSON.stringify(options);
-    memoryCache.wrap(cachekey, function (cb) {
+    memoryCache.wrap(cachekey, function(cb) {
       call(options, cb);
     }, callback);
   }
@@ -84,7 +87,7 @@ BaseSoapClient.client = function (wsdl, config) {
    */
   function call(action, params, opt, ignoreCache) {
     let options = opt || {};
-    return _client(wsdl, options).then(function (client) {
+    return _client(wsdl, options).then(function(client) {
       let o = util._extend(config, params);
       return _action(client, action, o, ignoreCache);
     });
