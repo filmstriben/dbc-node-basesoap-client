@@ -19,7 +19,8 @@ var cacheManager = _interopRequireWildcard(_cacheManager);
 var memoryCache = cacheManager.caching({
   store: 'memory',
   max: 100,
-  ttl: 100 });
+  ttl: 100
+});
 
 var BaseSoapClient = {};
 
@@ -65,10 +66,12 @@ BaseSoapClient.client = function (wsdl, config) {
 
       if (ignoreCache) {
         _actionWithoutCache(client[op], query, function (err, result) {
+          // eslint-disable-line
           err ? reject(err) : resolve(result); // eslint-disable-line
         });
       } else {
           _actionWithCache(client[op], query, function (err, result) {
+            // eslint-disable-line
             err ? reject(err) : resolve(result); // eslint-disable-line
           });
         }
