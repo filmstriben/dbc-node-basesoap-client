@@ -19,8 +19,8 @@
   "keywords": [
     "dbc"
   ],
-  "author": "DBC A/S",
-  "license": "ISC",
+  "author": "dbcdk",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/DBCDK/dbc-node-basesoap-client/issues"
   },
