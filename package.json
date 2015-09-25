@@ -1,6 +1,6 @@
 {
   "name": "dbc-node-basesoap-client",
-  "version": "0.0.4",
+  "version": "1.0.0",
   "description": "Basic soap client",
   "main": "index.js",
   "scripts": {
