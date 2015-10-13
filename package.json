@@ -4,7 +4,7 @@
   "description": "Basic soap client",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --compilers js:babel/register -R mocha-jenkins-reporter",
+    "test": "mocha --compilers js:babel/register src/__tests__ -R mocha-jenkins-reporter",
     "test:junit": "npm run test",
     "lint": "eslint ./src",
     "lint:checkstyle": "eslint ./src  -o report.xml -f checkstyle",
