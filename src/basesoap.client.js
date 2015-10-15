@@ -75,7 +75,10 @@ BaseSoapClient.client = (wsdl, config, logger) => {
       let query = util._extend({}, options);
 
       if (ignoreCache) {
-        _actionWithoutCache(client[op], query, function(err, result) { // eslint-disable-line
+        _actionWithoutCache(client[op], query, function(err, result, raw, soapHeader) { // eslint-disable-line
+          result.raw = raw;
+          result.soapHeader = soapHeader;
+
           if (Logger) {
             Logger.log('info', 'soap response', {
               service: op,
@@ -95,7 +98,9 @@ BaseSoapClient.client = (wsdl, config, logger) => {
         });
       }
       else {
-        _actionWithCache(client[op], query, function(err, result) { // eslint-disable-line
+        _actionWithCache(client[op], query, function(err, result, raw) { // eslint-disable-line
+          result.raw = raw;
+
           if (Logger) {
             Logger.log('info', 'soap response', {
               service: op,
