@@ -85,6 +85,7 @@ BaseSoapClient.client = (wsdl, config, logger) => {
               params: options,
               err: err,
               result: result,
+              soapRequest: client.lastRequest,
               statInfo: (result.result && result.result.statInfo) ? result.result.statInfo : ''
             });
           }
@@ -107,6 +108,7 @@ BaseSoapClient.client = (wsdl, config, logger) => {
               params: options,
               err: err,
               result: result,
+              soapRequest: client.lastRequest,
               statInfo: (result.result && result.result.statInfo) ? result.result.statInfo : ''
             });
           }
