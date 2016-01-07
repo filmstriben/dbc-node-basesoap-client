@@ -2,14 +2,6 @@
 
 import * as soap from 'soap';
 import * as util from 'util';
-import {Promise} from 'es6-promise';
-import * as cacheManager from 'cache-manager';
-
-let memoryCache = cacheManager.caching({
-  store: 'memory',
-  max: 100,
-  ttl: 100
-});
 
 let BaseSoapClient = {};
 
@@ -21,10 +13,6 @@ let BaseSoapClient = {};
  */
 BaseSoapClient.client = (wsdl, config, logger) => {
   let _soapclient;
-  let Logger = null;
-  if (logger) {
-    Logger = logger;
-  }
 
   /**
    * Returns a promise for a new client
@@ -32,13 +20,13 @@ BaseSoapClient.client = (wsdl, config, logger) => {
    * @param {Object }params
    * @return {Promise}
    */
-  function _client(wsdl, params) { // eslint-disable-line
-    return new Promise(function(resolve, reject) {
+  function createClient(wsdl, params) { // eslint-disable-line
+    return new Promise(function (resolve, reject) {
       if (_soapclient) {
         resolve(_soapclient);
       }
       // Create soap client from a given wsdl
-      soap.createClient(wsdl, params, function(err, client) {
+      soap.createClient(wsdl, params, function (err, client) {
         // Resolve promise from result
         if (err) {
           reject(err);
@@ -56,83 +44,34 @@ BaseSoapClient.client = (wsdl, config, logger) => {
    * @param  {Object} client  soap client object
    * @param  {String} op      Action on service
    * @param  {Object} options Options for request
-   * @param ignoreCache
    * @return {Promise}
    */
-  function _action(client, op, options, ignoreCache) {
+  function callAction(client, op, options) {
 
-    if (Logger) {
-      Logger.log('info', 'soap request', {
-        service: op,
-        params: options,
-        ignoreCache: ignoreCache
-      });
-    }
-
-    return new Promise(function(resolve, reject) {
-      // Call to service is wrapped by the cache manager
-      // that handles caching auto-magically
+    return new Promise(function (resolve, reject) {
       let query = util._extend({}, options);
+      client[op](query, (err, result, raw, soapHeader) => { // eslint-disable-line
+        result.raw = raw;
+        result.soapHeader = soapHeader;
 
-      if (ignoreCache) {
-        _actionWithoutCache(client[op], query, function(err, result, raw, soapHeader) { // eslint-disable-line
-          result.raw = raw;
-          result.soapHeader = soapHeader;
-
-          if (Logger) {
-            Logger.log('info', 'soap response', {
-              service: op,
-              params: options,
-              err: err,
-              result: result,
-              soapRequest: client.lastRequest,
-              statInfo: (result.result && result.result.statInfo) ? result.result.statInfo : ''
-            });
-          }
-
-          if (err) {
-            reject(err);
-          }
-          else {
-            resolve(result);
-          }
-        });
-      }
-      else {
-        _actionWithCache(client[op], query, function(err, result, raw) { // eslint-disable-line
-          result.raw = raw;
-
-          if (Logger) {
-            Logger.log('info', 'soap response', {
-              service: op,
-              params: options,
-              err: err,
-              result: result,
-              soapRequest: client.lastRequest,
-              statInfo: (result.result && result.result.statInfo) ? result.result.statInfo : ''
-            });
-          }
-
-          if (err) {
-            reject(err);
-          }
-          else {
-            resolve(result);
-          }
-        });
-      }
+        if (logger) {
+          logger.log('info', 'soap response', {
+            service: op,
+            params: options,
+            err: err,
+            result: result,
+            soapRequest: client.lastRequest,
+            statInfo: (result.result && result.result.statInfo) ? result.result.statInfo : ''
+          });
+        }
+        if (err) {
+          reject(err);
+        }
+        else {
+          resolve(result);
+        }
+      });
     });
-  }
-
-  function _actionWithCache(call, options, callback) { // eslint-disable-line
-    let cachekey = JSON.stringify(options);
-    memoryCache.wrap(cachekey, function(cb) {
-      call(options, cb);
-    }, callback);
-  }
-
-  function _actionWithoutCache(call, options, callback) { // eslint-disable-line
-    call(options, callback);
   }
 
   /**
@@ -140,20 +79,16 @@ BaseSoapClient.client = (wsdl, config, logger) => {
    * @param  {String} action  Type of request
    * @param  {Object} params map of params
    * @param  {Object} opt map of extra options i.e. alternative endpoint
-   * @param  {boolean} ignoreCache flag that indicates if the call should be cached.
    * @return {Promise}
    */
-  function call(action, params, opt, ignoreCache) {
-    let options = opt || {};
-    return _client(wsdl, options).then(function(client) {
-      let o = util._extend(config, params);
-      return _action(client, action, o, ignoreCache);
-    });
-  }
-
-  // Return factory for making soap requests
   return {
-    request: call
+    request(action, params, opt) {
+      let options = opt || {};
+      return createClient(wsdl, options).then(client => {
+        let o = util._extend(config, params);
+        return callAction(client, action, o);
+      });
+    }
   };
 };
 

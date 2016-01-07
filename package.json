@@ -36,8 +36,6 @@
     "mocha-jenkins-reporter": "^0.1.9"
   },
   "dependencies": {
-    "cache-manager": "^0.18.0",
-    "es6-promise": "^2.1.1",
     "soap": "^0.8.0"
   }
 }
