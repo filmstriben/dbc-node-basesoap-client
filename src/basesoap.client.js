@@ -51,9 +51,6 @@ BaseSoapClient.client = (wsdl, config, logger) => {
     return new Promise(function (resolve, reject) {
       let query = util._extend({}, options);
       client[op](query, (err, result, raw, soapHeader) => { // eslint-disable-line
-        result.raw = raw;
-        result.soapHeader = soapHeader;
-
         if (logger) {
           logger.log('info', 'soap response', {
             service: op,
@@ -67,8 +64,13 @@ BaseSoapClient.client = (wsdl, config, logger) => {
         if (err) {
           reject(err);
         }
-        else {
+        else if (result) {
+          result.raw = raw;
+          result.soapHeader = soapHeader;
           resolve(result);
+        }
+        else {
+          reject('no error or result.');
         }
       });
     });
