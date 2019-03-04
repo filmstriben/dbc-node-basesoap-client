@@ -36,6 +36,6 @@
     "mocha-jenkins-reporter": "^0.1.9"
   },
   "dependencies": {
-    "soap": "^0.8.0"
+    "soap": "0.25.0"
   }
 }
